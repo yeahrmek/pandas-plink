@@ -1,7 +1,7 @@
 from os.path import dirname, join, realpath
 
 import pytest
-from numpy import array, dtype, nan
+from numpy import array, dtype, nan, int8
 from numpy.testing import assert_array_equal, assert_equal
 
 from pandas_plink import example_file_prefix, read_plink, read_plink1_bin
@@ -13,7 +13,7 @@ def test_read_plink():
     file_prefix = join(datafiles, "data")
 
     (bim, fam, bed) = read_plink(file_prefix, verbose=False)
-    assert_equal(bed.dtype, dtype("float64"))
+    assert_equal(bed.dtype, dtype("int8"))
 
     assert_array_equal(bim.query("chrom=='1' and pos==72515")["snp"], ["rs4030300"])
     assert_array_equal(bim.query("chrom=='1'").shape, [10, 7])
@@ -25,16 +25,16 @@ def test_read_plink():
             [
                 [2, 2, 1],
                 [2, 1, 2],
-                [nan, nan, nan],
-                [nan, nan, 1],
+                [3, 3, 3],
+                [3, 3, 1],
                 [2, 2, 2],
                 [2, 2, 2],
                 [2, 1, 0],
                 [2, 2, 2],
                 [1, 2, 2],
                 [2, 1, 2],
-            ]
-        ),
+            ],
+        int8),
     )
 
 
@@ -62,7 +62,7 @@ def test_read_plink1_bin():
     fam = file_prefix + ".fam"
 
     G = read_plink1_bin(bed, bim, fam, verbose=False)
-    assert_equal(G.data.dtype, dtype("float64"))
+    assert_equal(G.data.dtype, dtype("int8"))
 
     snp = G.where((G.chrom == "1") & (G.pos == 72515), drop=True)["snp"].values
     assert_array_equal(snp, ["rs4030300"])
@@ -77,9 +77,9 @@ def test_read_plink1_bin():
     assert_array_equal(g["trait"].values, -9)
 
     arr = [
-        [2.0, 2.0, nan, nan, 2.0, 2.0, 2.0, 2.0, 1.0, 2.0],
-        [2.0, 1.0, nan, nan, 2.0, 2.0, 1.0, 2.0, 2.0, 1.0],
-        [1.0, 2.0, nan, 1.0, 2.0, 2.0, 0.0, 2.0, 2.0, 2.0],
+        [2, 2, 3, 3, 2, 2, 2, 2, 1, 2],
+        [2, 1, 3, 3, 2, 2, 1, 2, 2, 1],
+        [1, 2, 3, 1, 2, 2, 0, 2, 2, 2],
     ]
     assert_array_equal(G, arr)
 

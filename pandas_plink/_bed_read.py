@@ -1,4 +1,4 @@
-from numpy import ascontiguousarray, empty, float64, int64, nan, zeros
+from numpy import ascontiguousarray, empty, int64, int8, zeros
 
 
 def read_bed(filepath, nrows, ncols):
@@ -21,7 +21,7 @@ def read_bed(filepath, nrows, ncols):
             )
 
             shape = (row_end - row_start, col_end - col_start)
-            row_xs += [from_delayed(x, shape, float64)]
+            row_xs += [from_delayed(x, shape, int8)]
             col_start = col_end
         col_xs += [concatenate(row_xs, axis=1)]
         row_start = row_end
@@ -32,12 +32,13 @@ def read_bed(filepath, nrows, ncols):
 def _read_bed_chunk(filepath, nrows, ncols, row_start, row_end, col_start, col_end):
     from .bed_reader import ffi, lib
 
-    X = zeros((row_end - row_start, col_end - col_start), int64)
+    X = zeros((row_end - row_start, col_end - col_start), int8)
 
-    ptr = ffi.cast("uint64_t *", X.ctypes.data)
+    # print(X.strides, X.shape, X.offset)
+
+    ptr = ffi.cast("uint8_t *", X.ctypes.data)
     strides = empty(2, int64)
     strides[:] = X.strides
-    strides //= 8
 
     e = lib.read_bed_chunk(
         filepath.encode(),
@@ -53,6 +54,4 @@ def _read_bed_chunk(filepath, nrows, ncols, row_start, row_end, col_start, col_e
     if e != 0:
         raise RuntimeError("Failure while reading BED file %s." % filepath)
 
-    X = ascontiguousarray(X, float)
-    X[X == 3] = nan
     return X

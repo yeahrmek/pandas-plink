@@ -40,16 +40,16 @@ def read_plink(file_prefix, verbose=True):
         1  Sample_2  Sample_2         0         0      2    -9.00  1
         2  Sample_3  Sample_3  Sample_1  Sample_2      2    -9.00  2
         >>> print(bed.compute())
-        [[2.00 2.00 1.00]
-         [2.00 1.00 2.00]
-         [ nan  nan  nan]
-         [ nan  nan 1.00]
-         [2.00 2.00 2.00]
-         [2.00 2.00 2.00]
-         [2.00 1.00 0.00]
-         [2.00 2.00 2.00]
-         [1.00 2.00 2.00]
-         [2.00 1.00 2.00]]
+        [[2 2 1]
+         [2 1 2]
+         [3 3 3]
+         [3 3 1]
+         [2 2 2]
+         [2 2 2]
+         [2 1 0]
+         [2 2 2]
+         [1 2 2]
+         [2 1 2]]
 
     The values of the ``bed`` matrix denote how many alleles ``a1`` (see output of data
     frame ``bim``) are in the corresponding position and individual. Notice the column
@@ -61,16 +61,16 @@ def read_plink(file_prefix, verbose=True):
         >>> chrom1 = bim.query("chrom=='1'")
         >>> X = bed[chrom1.i.values, :].compute()
         >>> print(X)
-        [[2.00 2.00 1.00]
-         [2.00 1.00 2.00]
-         [ nan  nan  nan]
-         [ nan  nan 1.00]
-         [2.00 2.00 2.00]
-         [2.00 2.00 2.00]
-         [2.00 1.00 0.00]
-         [2.00 2.00 2.00]
-         [1.00 2.00 2.00]
-         [2.00 1.00 2.00]]
+        [[2 2 1]
+         [2 1 2]
+         [3 3 3]
+         [3 3 1]
+         [2 2 2]
+         [2 2 2]
+         [2 1 0]
+         [2 2 2]
+         [1 2 2]
+         [2 1 2]]
 
     It also allows the use of the wildcard character ``*`` for mapping
     multiple BED files at
@@ -175,7 +175,7 @@ def read_plink1_bin(bed, bim=None, fam=None, verbose=True):
         >>> G = read_plink1_bin(join(get_data_folder(), "chr*.bed"), verbose=False)
         >>> print(G)
         <xarray.DataArray 'genotype' (sample: 14, variant: 1252)>
-        dask.array<shape=(14, 1252), dtype=float64, chunksize=(14, 779)>
+        dask.array<shape=(14, 1252), dtype=int8, chunksize=(14, 779)>
         Coordinates:
           * sample   (sample) object 'B001' 'B002' 'B003' ... 'B012' 'B013' 'B014'
           * variant  (variant) object '11_316849996' '11_316874359' ... '12_373081507'
@@ -197,6 +197,8 @@ def read_plink1_bin(bed, bim=None, fam=None, verbose=True):
     Suppose we want the genotypes of the chromosome 11 only:
 
     .. doctest::
+
+        ::SKIP
 
         >>> G = G.where(G.chrom == "11", drop=True)
         >>> print(G)

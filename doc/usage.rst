@@ -26,7 +26,7 @@ It is as simple as:
     >>> G = read_plink1_bin("chr11.bed", "chr11.bim", "chr11.fam", verbose=False)
     >>> print(G)
     <xarray.DataArray 'genotype' (sample: 14, variant: 779)>
-    dask.array<shape=(14, 779), dtype=float64, chunksize=(14, 779)>
+    dask.array<shape=(14, 779), dtype=int8, chunksize=(14, 779)>
     Coordinates:
       * sample   (sample) object 'B001' 'B002' 'B003' ... 'B012' 'B013' 'B014'
       * variant  (variant) object '11_316849996' '11_316874359' ... '11_345698259'
@@ -52,7 +52,7 @@ Lets print the genotype value of sample `B003` and variant `11_316874359`:
 .. doctest::
 
     >>> print(G.sel(sample="B003", variant="11_316874359").values)
-    0.0
+    0
     >>> print(G.a0.sel(variant="11_316874359").values)
     G
 
@@ -62,7 +62,7 @@ Likewise, sample `B003` has two alleles `G` at the variant `11_316874359`:
 .. doctest::
 
     >>> print(G.sel(sample="B003", variant="11_316941526").values)
-    2.0
+    2
     >>> print(G.a1.sel(variant="11_316941526").values)
     C
 
@@ -71,13 +71,13 @@ Now lets print a summary of the genotype values:
 .. doctest::
 
     >>> print(G.values)
-    [[0.00 0.00 2.00 ... 0.00 0.00 0.00]
-     [0.00 1.00 2.00 ... 0.00 0.00  nan]
-     [0.00 0.00 2.00 ... 0.00 0.00 0.00]
+    [[0 0 2 ... 0 0 0]
+     [0 1 2 ... 0 0 3]
+     [0 0 2 ... 0 0 0]
      ...
-     [2.00 2.00 0.00 ... 2.00 2.00 2.00]
-     [2.00 1.00 0.00 ... 2.00 2.00 1.00]
-     [0.00 0.00 2.00 ... 0.00 0.00  nan]]
+     [2 2 0 ... 2 2 2]
+     [2 1 0 ... 2 2 1]
+     [0 0 2 ... 0 0 3]]
 
 
 The genotype values can be either ``0``, ``1``, ``2``, or ``NaN``:
@@ -85,7 +85,7 @@ The genotype values can be either ``0``, ``1``, ``2``, or ``NaN``:
 - ``0`` Homozygous having the first allele (given by coordinate ``a0``)
 - ``1`` Heterozygous
 - ``2`` Homozygous having the second allele (given by coordinate ``a1``)
-- ``NaN`` Missing genotype
+- ``NaN`` Missing genotype (3)
 
 
 Kinship matrix

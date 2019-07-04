@@ -18,7 +18,7 @@ typedef unsigned __int64 uint64_t;
 int read_bed_chunk(char *filepath, uint64_t nrows, uint64_t ncols,
                    uint64_t row_start, uint64_t col_start,
                    uint64_t row_end, uint64_t col_end,
-                   uint64_t *out, uint64_t *strides)
+                   uint8_t *out, uint64_t *strides)
 {
         char b, b0, b1, p0, p1;
         uint64_t r;

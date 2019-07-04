@@ -10,7 +10,7 @@ ffibuilder.cdef(
     int read_bed_chunk(char*, uint64_t, uint64_t,
                        uint64_t, uint64_t,
                        uint64_t, uint64_t,
-                       uint64_t*, uint64_t*);
+                       uint8_t*, uint64_t*);
 """
 )
 
@@ -21,7 +21,7 @@ ffibuilder.set_source(
 int read_bed_chunk(char*, uint64_t, uint64_t,
                        uint64_t, uint64_t,
                        uint64_t, uint64_t,
-                       uint64_t*, uint64_t*);
+                       uint8_t*, uint64_t*);
 """,
     sources=[join("pandas_plink", "_bed_reader.c")],
 )
